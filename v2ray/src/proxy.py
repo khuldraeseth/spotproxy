@@ -79,7 +79,7 @@ class Proxy:
         print(f"my endpoint is: {ip}:{V2RAY_PORT}")
 
         forwarding_server = ForwardingServerThread(
-            self.wireguard_endpoint, self.nat_endpoint
+            self.v2ray_endpoint, self.nat_endpoint
         )
         migration_handler = MigrationHandler(self.migration_endpoint)
         polling_handler = PollingHandler(self.polling_endpoint)
