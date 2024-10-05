@@ -23,7 +23,7 @@ class MigrationHandler(threading.Thread):
             f"{self.listen_endpoint[0]}:{self.listen_endpoint[1]}"
         )
         dock_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        dock_socket.bind((self.listen_endpoint[0], self.listen_endpoint[1]))
+        dock_socket.bind(self.listen_endpoint)
         dock_socket.listen(5)
 
         while True:

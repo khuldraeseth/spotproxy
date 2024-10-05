@@ -16,4 +16,4 @@ RUN pip install -r requirements.txt
 EXPOSE 10086/tcp
 EXPOSE 10086/udp
 
-CMD startup-scripts/peer-boot.sh
+CMD startup-scripts/proxy-boot.sh

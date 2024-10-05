@@ -1,6 +1,6 @@
 import threading
 import socket
-from settings import WIREGUARD_CONFIG_LOCATION
+from settings import V2RAY_CONFIG_LOCATION
 import psutil
 from time import sleep
 import json
@@ -110,7 +110,7 @@ class MigratingAgent(threading.Thread):
         # probably not needed with v2ray? but we might run into encryption
         # problems later :(
 
-        with open(WIREGUARD_CONFIG_LOCATION, "a") as f:
+        with open(V2RAY_CONFIG_LOCATION, "a") as f:
             json.dump(config, f)
 
 
