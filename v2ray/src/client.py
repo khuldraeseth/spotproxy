@@ -14,7 +14,7 @@ import json
 
 class MigrationHandler(threading.Thread):
     def __init__(self, listen_endpoint: tuple):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.listen_endpoint = listen_endpoint
 
     def run(self):

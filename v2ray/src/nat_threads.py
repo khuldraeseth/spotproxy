@@ -15,7 +15,9 @@ def get_public_ip():
             public_ip = response.json()["origin"]
             return public_ip
         else:
-            print(f"Failed to retrieve public IP. Status code: {response.status_code}")
+            print(
+                f"Failed to retrieve public IP. Status code: {response.status_code}"
+            )
 
     except requests.RequestException as e:
         print(f"Request error: {e}")
@@ -25,7 +27,7 @@ def get_public_ip():
 
 class EchoThread(threading.Thread):
     def __init__(self, client_socket: socket.socket, client_address: str):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.client_socket = client_socket
         self.client_address = client_address
 
@@ -41,7 +43,7 @@ class EchoThread(threading.Thread):
 
 class NATThread(threading.Thread):
     def __init__(self, client_socket: socket.socket, client_address: str):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.client_socket = client_socket
         self.client_address = client_address
 
@@ -64,7 +66,7 @@ class BEEGThread(threading.Thread):
     def __init__(
         self, client_socket: socket.socket, client_address: str, beeg_file_path
     ):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.client_socket = client_socket
         self.client_address = client_address
         self.beeg_file_path = beeg_file_path
@@ -104,14 +106,17 @@ class BEEGThread(threading.Thread):
 
 class KVThread(threading.Thread):
     def __init__(self, client_socket: socket.socket, client_address: str):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.client_socket = client_socket
         self.client_address = client_address
 
     def run(self):
         key = "testing_key"
         redis_client = redis.StrictRedis(
-            host="3.80.71.88", port=6379, password="foobared", decode_responses=True
+            host="3.80.71.88",
+            port=6379,
+            password="foobared",
+            decode_responses=True,
         )
         redis_client.set(
             key,

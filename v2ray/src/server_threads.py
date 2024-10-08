@@ -18,7 +18,7 @@ class ForwardThread(threading.Thread):
         destination_socket: socket.socket,
         description: str,
     ):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.source_socket = source_socket
         self.destination_socket = destination_socket
         self.description = description
@@ -28,34 +28,10 @@ class ForwardThread(threading.Thread):
             while data := self.source_socket.recv(1024):
                 self.destination_socket.sendall(data)
 
-        # data = " "
-        # try:
-        #     while data:
-        #         data = self.source_socket.recv(1024)
-        #         if data:
-        #             self.destination_socket.sendall(data)
-        #         else:
-        #             try:
-        #                 self.source_socket.close()
-        #                 self.destination_socket.close()
-        #             except:
-        #                 # log('connection closed')
-        #                 break
-        # except:
-        #     # log('connection closed')
-        #     try:
-        #         self.source_socket.close()
-        #     except:
-        #         pass
-        #     try:
-        #         self.destination_socket.close()
-        #     except:
-        #         pass
-
 
 class ForwardingServerThread(threading.Thread):
     def __init__(self, listen_endpoint: tuple, forward_endpoint: tuple):
-        threading.Thread.__init__(self)
+        super().__init__()
 
         self.listen_endpoint = listen_endpoint
         self.forward_endpoint = forward_endpoint
@@ -63,28 +39,32 @@ class ForwardingServerThread(threading.Thread):
     def run(self):
         global client_addresses, client_sockets, nat_sockets
         try:
-            dock_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            dock_socket.bind(self.listen_endpoint)
-            dock_socket.listen(5)
-            while True:
-                client_socket, client_address = dock_socket.accept()
-                if client_address not in client_addresses:
-                    client_addresses.append(client_address)
-                    client_sockets.append(client_socket)
+            with socket.socket(
+                socket.AF_INET, socket.SOCK_STREAM
+            ) as dock_socket:
+                dock_socket.bind(self.listen_endpoint)
+                dock_socket.listen(5)
+                while True:
+                    client_socket, client_address = dock_socket.accept()
+                    if client_address not in client_addresses:
+                        client_addresses.append(client_address)
+                        client_sockets.append(client_socket)
 
-                if len(client_addresses) % 10 == 0:
-                    print(len(client_addresses))
-                nat_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                nat_socket.connect(self.forward_endpoint)
-                nat_sockets.append(nat_socket)
-                way1 = ForwardThread(
-                    client_socket, nat_socket, "client -> server"
-                )
-                way2 = ForwardThread(
-                    nat_socket, client_socket, "server -> client"
-                )
-                way1.start()
-                way2.start()
+                    if len(client_addresses) % 10 == 0:
+                        print(len(client_addresses))
+                    nat_socket = socket.socket(
+                        socket.AF_INET, socket.SOCK_STREAM
+                    )
+                    nat_socket.connect(self.forward_endpoint)
+                    nat_sockets.append(nat_socket)
+                    way1 = ForwardThread(
+                        client_socket, nat_socket, "client -> server"
+                    )
+                    way2 = ForwardThread(
+                        nat_socket, client_socket, "server -> client"
+                    )
+                    way1.start()
+                    way2.start()
         except Exception as e:
             print("ERROR: a fatal error has happened")
             print(str(e))
@@ -92,7 +72,7 @@ class ForwardingServerThread(threading.Thread):
 
 class MigratingAgent(threading.Thread):
     def __init__(self, client_socket: socket.socket):
-        super.__init__(self)
+        super().__init__()
         self.client_socket = client_socket
 
     def run(self):
@@ -116,7 +96,7 @@ class MigratingAgent(threading.Thread):
 
 class MigrationHandler(threading.Thread):
     def __init__(self, listen_endpoint: tuple):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.listen_endpoint = listen_endpoint
 
     def run(self):
@@ -148,7 +128,7 @@ def calculate_network_throughput(interval=0.01):
 
 class PollingHandler(threading.Thread):
     def __init__(self, listen_endpoint: tuple):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.listen_endpoint = listen_endpoint
 
     def run(self):

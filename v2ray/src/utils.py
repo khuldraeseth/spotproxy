@@ -40,7 +40,7 @@ def get_traffic_python(interface):
 
 class TrafficGetterThread(threading.Thread):
     def __init__(self, start_time, duration):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.start_time = start_time
         self.duration = duration
 
@@ -77,7 +77,7 @@ class TrafficGetterThread(threading.Thread):
 
 class TrafficMeasurementPythonThread(threading.Thread):
     def __init__(self, start_time, duration):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.start_time = start_time
         self.duration = duration
 
@@ -117,8 +117,12 @@ class TrafficMeasurementPythonThread(threading.Thread):
             except:
                 sleep(0.01)
                 continue
-            bytes_per_second_in = current_stats.bytes_recv - old_stats.bytes_recv
-            bytes_per_second_out = current_stats.bytes_sent - old_stats.bytes_sent
+            bytes_per_second_in = (
+                current_stats.bytes_recv - old_stats.bytes_recv
+            )
+            bytes_per_second_out = (
+                current_stats.bytes_sent - old_stats.bytes_sent
+            )
 
             with open("throughput_p_i.txt", "a") as file:
                 file.write(str(bytes_per_second_in) + "\n")
@@ -134,7 +138,7 @@ class TrafficMeasurementPythonThread(threading.Thread):
 
 class TestingMigrationSenderThread(threading.Thread):
     def __init__(self, start_time, duration):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.start_time = start_time
         self.duration = duration
 
@@ -152,7 +156,9 @@ class TestingMigrationSenderThread(threading.Thread):
                     ip_src = TESTING_MIGRATION_DESTS[i]
                     ip_dest = TESTING_MIGRATION_DESTS[i + 1]
 
-                    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    client_socket = socket.socket(
+                        socket.AF_INET, socket.SOCK_STREAM
+                    )
                     client_socket.connect((ip_src, BROKER_PORT))
 
                     message = f"migrate {ip_dest}"
@@ -168,7 +174,7 @@ class TestingMigrationSenderThread(threading.Thread):
 
 class TestingDataSenderThread(threading.Thread):
     def __init__(self, start_time, duration):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.start_time = start_time
         self.duration = duration
 
