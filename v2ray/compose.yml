@@ -1,0 +1,11 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Server.Dockerfile
+    network_mode: host
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /usr/bin/spotproxy-v2ray
